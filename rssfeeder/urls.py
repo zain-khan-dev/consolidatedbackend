@@ -15,8 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from . import views
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('rssfeeder/', include('rssfeeder.urls'))
+    path('cnn', views.cnnRSSEngine),
+    path('hn', views.getHackerNewsEngine),
+    path('nyt', views.getNYTEngine),
+    path('tm', views.getTechMemeEngine),
+    path('rt', views.getReutersEngine),
+    path('tc', views.getTechCrunchEngine),
+    path('mit', views.getMITEngine),
+    path('wd', views.getWiredEngine),
+    path('ieee', views.getIeeeEngine),
+    path('ars', views.getARSTechnicaEngine),     # remove ars wont support it
+    path("bbc", views.getBBCEngine),
+    path("htg", views.getHowToGeekEngine)
 ]
