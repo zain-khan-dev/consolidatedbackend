@@ -20,12 +20,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('rssfeeder/', include('rssfeeder.urls')),
+    path("ecommerce/", include('ecommerce.urls')),
     path("api/token/", TokenObtainPairView.as_view()),
-    path("api/token/refresh/", TokenObtainPairView.as_view()),
+    path("api/token/refresh/", TokenRefreshView.as_view()),
+    
 ]

@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 
 # "title", "link", "description", "category", "image"
 class HeaderSerializer(serializers.Serializer):
-    title  = serializers.CharField(max_length=2000)
-    link = serializers.CharField(max_length=2000)
-    description  = serializers.CharField(max_length=2000)
+    title  = serializers.CharField(max_length=2000, allow_null=True)
+    link = serializers.CharField(max_length=2000, allow_null=True)
+    description  = serializers.CharField(max_length=2000, allow_null=True)
     category = serializers.CharField(max_length=2000, allow_null=True)
     image  = serializers.CharField(max_length=2000, allow_null=True, allow_blank=True)
     
@@ -21,7 +21,7 @@ class ItemSerializer(serializers.Serializer):
     comments  = serializers.CharField(max_length=2000, allow_null=True)
 
 class RSSSerializer(serializers.Serializer):
-    header = HeaderSerializer()
+    header = HeaderSerializer(allow_null=True)
     items = ItemSerializer(many=True)
 
 

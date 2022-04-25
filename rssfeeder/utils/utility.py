@@ -4,10 +4,16 @@ import xml.etree.ElementTree as ET
 import requests
 from collections import defaultdict
 
+from rssfeeder.utils.Constants import MAPPED_ENDPOINTS
+
 # If the element is not none returns the text otherwise returns none
 def getText(item):
     if(item != None):
-        return item.text
+        text_value = item.text
+        if(text_value is not None):
+            return text_value[:2000]
+        else:
+            return None
     return item
 
 # Builds the header received from the channel. This is the header for the whole page
@@ -22,6 +28,25 @@ def buildHeader(rssDict):
     return result_dict
 
 
+
+
+def getMappedURL(channel):
+    return MAPPED_ENDPOINTS[channel]
+
+
+
+def get_rss_from_url(url):
+    return getRSSData(url)
+
+
+
+def getMultipleRssData(rssChannels):
+    resultantDict = {"header":None, "items":[]}
+    for channel in rssChannels:
+        channelDict = getRSSData(getMappedURL(channel))
+        resultantDict["items"].extend(channelDict["items"])
+    print(resultantDict)
+    return resultantDict
     
 
 
@@ -53,7 +78,7 @@ def buildItemNodes(item):
 # we get the list for items
 def parseXMLData(data):
     rss = ET.fromstring(data) # returned is the rss node
-    channel  =rss[0] # we get to the channel node
+    channel  =rss.find("channel") # get the channel node
     rssDict = defaultdict(lambda:None, {ele.tag:ele for ele in channel if ele.tag != "item"})
     print(rssDict)
     header = buildHeader(rssDict)
@@ -70,8 +95,8 @@ def getRSSData(siteURL):
     request = requests.get(siteURL)
     if(request.status_code >=200 and request.status_code < 300):
         rssDict = parseXMLData(request.content)
+        print(rssDict)
         return rssDict
     else:
         print("Could not query")
-        raise RuntimeError("There was a problem querying the result")
-        return None
+        return {"error":"There was a problem parsing the xml data"}
