@@ -8,8 +8,14 @@ router.register('product', views.ProductViewSet)
 
 router.register('customer', views.CustomerViewSet)
 
+router.register("seller", views.SellerViewSet)
+
+router.register("order", views.OrderView)
+
+
 urlpatterns = [
-    path('seller/', views.SellerViews.as_view()),
     path('', include(router.urls)),
-    path("order/", views.OrderView.as_view())
+    path("addToCart/", views.AddToCardView.as_view()),
+    path("cart/", views.UserCartView.as_view()),
+    path('orders/<int:cid>/', views.CustomerOrderView.as_view())
 ]

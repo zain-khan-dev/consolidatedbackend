@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rssfeeder',
-    'ecommerce'
+    'ecommerce',
 ]
 
 MIDDLEWARE = [

@@ -38,3 +38,8 @@ class Order(models.Model):
     order_ts = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=OrderStatus, max_length=40)
 
+
+
+class Cart(models.Model):
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="cart")
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cartitem")

@@ -1,6 +1,6 @@
 from wsgiref import validate
 from rest_framework import serializers
-from .models import Customer, Seller, Product, Order
+from .models import Cart, Customer, Seller, Product, Order
 from django.contrib.auth.models import User
 
 
@@ -39,6 +39,9 @@ class CustomerDetailSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ['id','name']
 
+
+
+
 class OrderProductSerializer(serializers.ModelSerializer):
 
     customer_id = CustomerDetailSerializer()
@@ -47,6 +50,22 @@ class OrderProductSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id','customer_id', 'order_ts', 'status']
 
+
+
+class AddCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+
+class CartSerializer(serializers.ModelSerializer):
+
+    product_id = ProductDetailSerializer()
+
+    class Meta:
+        model = Cart
+        fields = ['product_id']
     
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -56,11 +75,35 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+class CartItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+
+class UserCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Customer
+        fields = ['cart']
+
+
+
+class CartUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ["product_id"]
+
+
 class CustomerSeralizer(serializers.ModelSerializer):
 
     user = UserSeralizer()
 
     orders = OrderCustomerSerializer(many=True, read_only=True)
+
+    cart = CartUserSerializer(many=True, read_only=True)
 
     # orders = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
@@ -81,8 +124,7 @@ class CustomerSeralizer(serializers.ModelSerializer):
 
 
     
-        
-
+    
 
 
 class SerllerSerializer(serializers.ModelSerializer):
@@ -107,11 +149,22 @@ class SerllerSerializer(serializers.ModelSerializer):
 
 
 
+class ProductViewSerializer(serializers.ModelSerializer):
+
+    seller = SerllerSerializer(read_only=True)
+
+    class Meta:
+        model=Product
+        fields = "__all__"
+
+
 
 class ProductSeralizer(serializers.ModelSerializer):
 
     orders = OrderProductSerializer(many=True, read_only=True)
 
+    # seller = serializers.CharField(source='seller.name', read_only=True)
+    # seller = SerllerSerializer(read_only=True)
 
     class Meta:
         model = Product
