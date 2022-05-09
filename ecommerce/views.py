@@ -56,9 +56,10 @@ class ProductViewSet(ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
-        name = request.data["title"]
+        name = request.data["name"]
         description = request.data["description"]
         user = request.user
+        
         seller = ProfileUser.objects.filter(type="S", user=user).first()
         data = {"name":name, "description":description, "seller":seller.id}
         product = ProductSeralizer(data=data)
@@ -81,32 +82,30 @@ class OrderView(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    def create(self, request, *args, **kwargs):
-        status = request.data["status"]
-        product_id = request.data["product_id"]
+    permission_class = [permissions.IsAuthenticated]
+
+
+    def list(self, request):
         user = request.user
-        customer = ProfileUser.objects.filter(user=user,type="C").first()
-        product = Product.objects.filter(id = product_id).first()
-        order = Order.objects.create(customer_id=customer, product_id=product, status=status)
-        print(order)
-        order.save()
-        return Response({"first":"second"}) #TODO: Need to return the created order
+        customer = ProfileUser.objects.filter(user = user, type='C').prefetch_related('orders').first()
+        serializedOrders = OrderSerializer(customer.orders, many=True)
+        return Response(serializedOrders.data)
 
 
-class AddToCardView(APIView):
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        customer = ProfileUser.objects.filter(user=user, type='C').first()
+        serializer.save(customer_id=customer)
 
 
+class AddToCardView(CreateAPIView):
     serializer_class = AddCartSerializer
 
-    def post(self, request):
-        user = request.user
-        product = request.data
-
-        print(product["product_id"])
-        product = Product.objects.get(id=product["product_id"])
-        customer = ProfileUser.objects.filter(user = user, type="C").first()
-        cart = Cart.objects.create(customer_id=customer, product_id=product)
-        return Response(CartSerializer(cart).data)
+    def perform_create(self, serializer):
+        user = self.request.user
+        customer = ProfileUser.objects.filter(user=user, type='C').first()
+        serializer.save(customer_id=customer)
 
 
 

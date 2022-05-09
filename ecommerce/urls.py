@@ -17,5 +17,4 @@ urlpatterns = [
     path('', include(router.urls)),
     path("addToCart/", views.AddToCardView.as_view()),
     path("cart/", views.UserCartView.as_view()),
-    path('orders/<int:cid>/', views.CustomerOrderView.as_view())
 ]

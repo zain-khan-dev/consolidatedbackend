@@ -19,7 +19,7 @@ class Product(models.Model):
     stars = models.IntegerField(default=5,validators=[MinValueValidator(1), MaxValueValidator(5)])
     seller = models.ForeignKey(ProfileUser,on_delete=models.CASCADE, related_name='seller')
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    stock = models.IntegerField(max_length=5)
+    stock = models.IntegerField()
 
 
 
@@ -37,4 +37,4 @@ class Order(models.Model):
 class Cart(models.Model):
     customer_id = models.ForeignKey(ProfileUser, on_delete=models.CASCADE, related_name="cart")
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cartitem")
-    quantity = models.IntegerField(max_length = 2)
+    quantity = models.IntegerField()

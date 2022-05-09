@@ -56,7 +56,7 @@ class AddCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['product_id', 'quantity']
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -65,14 +65,14 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['product_id']
+        fields = ['product_id', 'quantity']
     
 
 class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['product_id', 'status', 'bought_at', 'order_ts', 'quantity']
 
 
 
