@@ -5,7 +5,7 @@ from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
 from ecommerce.serialzers import CustomerSeralizer, OrderSerializer, ProductSeralizer, SerllerSerializer
-from .models import Customer, Order, Seller, Product
+from .models import ProfileUser, Order, Product
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
@@ -23,7 +23,7 @@ from .serialzers import UserCartSerializer, CartItemSerializer, AddCartSerialize
 
 
 class CustomerViewSet(ModelViewSet):
-    queryset = Customer.objects.all()
+    queryset = ProfileUser.objects.filter(type="C")
     serializer_class = CustomerSeralizer
 
 
@@ -31,13 +31,13 @@ class CustomerViewSet(ModelViewSet):
 
 
 class CustomerRemove(RetrieveDestroyAPIView):
-    queryset = Customer.objects.all()
+    queryset = ProfileUser.objects.filter(type="C")
     serializer_class = CustomerSeralizer
 
 
 
 class SellerViewSet(ModelViewSet):
-    queryset = Seller.objects.all()
+    queryset = ProfileUser.objects.filter(type="S")
     serializer_class = SerllerSerializer
 
 
@@ -59,7 +59,7 @@ class ProductViewSet(ModelViewSet):
         name = request.data["title"]
         description = request.data["description"]
         user = request.user
-        seller = Seller.objects.filter(user = user).first()
+        seller = ProfileUser.objects.filter(type="S", user=user).first()
         data = {"name":name, "description":description, "seller":seller.id}
         product = ProductSeralizer(data=data)
         if(product.is_valid()):
@@ -85,7 +85,7 @@ class OrderView(ModelViewSet):
         status = request.data["status"]
         product_id = request.data["product_id"]
         user = request.user
-        customer = Customer.objects.filter(user=user).first()
+        customer = ProfileUser.objects.filter(user=user,type="C").first()
         product = Product.objects.filter(id = product_id).first()
         order = Order.objects.create(customer_id=customer, product_id=product, status=status)
         print(order)
@@ -104,7 +104,7 @@ class AddToCardView(APIView):
 
         print(product["product_id"])
         product = Product.objects.get(id=product["product_id"])
-        customer = Customer.objects.filter(user = user).first()
+        customer = ProfileUser.objects.filter(user = user, type="C").first()
         cart = Cart.objects.create(customer_id=customer, product_id=product)
         return Response(CartSerializer(cart).data)
 
@@ -119,7 +119,7 @@ class UserCartView(APIView):
 
     def get(self, request):
         user = request.user
-        customer = Customer.objects.filter(user=user).first()
+        customer = ProfileUser.objects.filter(user=user, type="C").first()
         print(customer.id)
         cartItems = CartSerializer(customer.cart.select_related('product_id').all(), many=True)
         return Response(cartItems.data)

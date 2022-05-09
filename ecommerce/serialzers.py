@@ -1,6 +1,6 @@
 from wsgiref import validate
 from rest_framework import serializers
-from .models import Cart, Customer, Seller, Product, Order
+from .models import Cart, ProfileUser, Product, Order
 from django.contrib.auth.models import User
 
 
@@ -36,7 +36,7 @@ class OrderCustomerSerializer(serializers.ModelSerializer):
 class CustomerDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Customer
+        model = ProfileUser
         fields = ['id','name']
 
 
@@ -86,7 +86,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 class UserCartSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Customer
+        model = ProfileUser
         fields = ['cart']
 
 
@@ -108,8 +108,8 @@ class CustomerSeralizer(serializers.ModelSerializer):
     # orders = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
-        model = Customer
-        fields = '__all__'
+        model = ProfileUser
+        fields = ['user', 'name','address','phone_number', 'orders', 'cart']
 
 
 
@@ -120,7 +120,7 @@ class CustomerSeralizer(serializers.ModelSerializer):
         validated_data.pop('user')
         # return Customer.objects.create(**validated_data)
         user = User.objects.create_user(username=username, password=password)
-        return Customer.objects.create(user=user, **validated_data)
+        return ProfileUser.objects.create(user=user,type='C', **validated_data)
 
 
     
@@ -134,8 +134,8 @@ class SerllerSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = Seller
-        fields = '__all__'
+        model = ProfileUser
+        fields = ['user', 'name','address','phone_number']
 
 
     def create(self, validated_data):
@@ -145,7 +145,7 @@ class SerllerSerializer(serializers.ModelSerializer):
         validated_data.pop('user')
         # return Customer.objects.create(**validated_data)
         user = User.objects.create_user(username=username, password=password)
-        return Seller.objects.create(user=user, **validated_data)
+        return ProfileUser.objects.create(user=user,type='S', **validated_data)
 
 
 
