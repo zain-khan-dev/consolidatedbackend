@@ -27,55 +27,33 @@ class CustomerViewSet(ModelViewSet):
     serializer_class = CustomerSeralizer
 
 
-    
-
-
-class CustomerRemove(RetrieveDestroyAPIView):
-    queryset = ProfileUser.objects.filter(type="C")
-    serializer_class = CustomerSeralizer
-
-
-
 class SellerViewSet(ModelViewSet):
     queryset = ProfileUser.objects.filter(type="S")
     serializer_class = SerllerSerializer
 
 
 
+
 class ProductViewSet(ModelViewSet):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Product.objects.all()
-    serializer_class = ProductSeralizer
+
 
 
     def get_serializer_class(self, *args, **kwargs):
         if(self.action == "retrieve" or self.action == "list"):
-            return ProductViewSerializer
-        else:
             return ProductSeralizer
-
-
-    def create(self, request, *args, **kwargs):
-        name = request.data["name"]
-        description = request.data["description"]
-        user = request.user
-        
-        seller = ProfileUser.objects.filter(type="S", user=user).first()
-        data = {"name":name, "description":description, "seller":seller.id}
-        product = ProductSeralizer(data=data)
-        if(product.is_valid()):
-            product.save()
         else:
-            print(product.errors)
-        return Response(product.data)
-    
+            return  ProductViewSerializer
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     print(request.data, args, kwargs)
-    #     productID = kwargs["pk"]
-    #     print(productID)
-    #     product = Product.objects.filter(id=productID).first()
-    #     return Response(ProductViewSerializer(product).data)
+
+
+    def perform_create(self, serializer):
+        print("here")
+        user = self.request.user
+        seller = ProfileUser.objects.filter(user=user, type="S").first()
+        serializer.save(seller_id=seller.id)
+
 
 
 class OrderView(ModelViewSet):

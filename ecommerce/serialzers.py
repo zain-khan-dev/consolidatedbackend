@@ -151,6 +151,7 @@ class SerllerSerializer(serializers.ModelSerializer):
 
 class ProductViewSerializer(serializers.ModelSerializer):
 
+    print("1")
     seller = SerllerSerializer(read_only=True)
 
     class Meta:
