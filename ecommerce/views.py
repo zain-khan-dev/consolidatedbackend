@@ -63,10 +63,20 @@ class OrderView(ModelViewSet):
     permission_class = [permissions.IsAuthenticated]
 
 
+        
+
     def list(self, request):
         user = request.user
-        customer = ProfileUser.objects.filter(user = user, type='C').prefetch_related('orders').first()
-        serializedOrders = OrderSerializer(customer.orders, many=True)
+        profile = ProfileUser.objects.filter(user = user).prefetch_related("orders").first()
+        if(profile.type == "S"): # if a seller getting order list
+            products = Product.objects.filter(seller=profile).prefetch_related("orders").all()
+            orders = list(map(lambda product:product.orders.all(), products))
+            serializedOrders = OrderSerializer(*orders, many=True)
+            print(serializedOrders.data)
+        else: # if a customer getting order list
+            print(profile.orders)
+            serializedOrders = OrderSerializer(profile.orders, many=True)
+            print(p)
         return Response(serializedOrders.data)
 
 
