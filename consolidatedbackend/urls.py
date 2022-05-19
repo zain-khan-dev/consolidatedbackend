@@ -28,3 +28,8 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view()),
     
 ]
+
+
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
+]

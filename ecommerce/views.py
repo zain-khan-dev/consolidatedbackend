@@ -76,7 +76,6 @@ class OrderView(ModelViewSet):
         else: # if a customer getting order list
             print(profile.orders)
             serializedOrders = OrderSerializer(profile.orders, many=True)
-            print(p)
         return Response(serializedOrders.data)
 
 

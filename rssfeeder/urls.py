@@ -7,3 +7,5 @@ urlpatterns = [
     path("rssFromURL/", views.RssFromURL.as_view()),
     path('users/', views.SignupView.as_view()),
 ]
+
+
