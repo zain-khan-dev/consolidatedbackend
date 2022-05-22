@@ -68,7 +68,7 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ['product_id', 'quantity']
     
 
-class OrderSerializer(serializers.ModelSerializer):
+class ViewOrderSerializer(serializers.ModelSerializer):
 
 
     product_id = ProductDetailSerializer()
@@ -127,6 +127,15 @@ class CustomerSeralizer(serializers.ModelSerializer):
 
 
     
+class PlaceOrderSerializer(serializers.ModelSerializer):
+
+    customer_id = CustomerSeralizer(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
     
 
 
@@ -154,7 +163,6 @@ class SerllerSerializer(serializers.ModelSerializer):
 
 class ProductViewSerializer(serializers.ModelSerializer):
 
-    print("1")
     seller = SerllerSerializer(read_only=True)
 
     class Meta:
@@ -165,7 +173,7 @@ class ProductViewSerializer(serializers.ModelSerializer):
 
 class ProductSeralizer(serializers.ModelSerializer):
 
-    orders = OrderProductSerializer(many=True, read_only=True)
+    # orders = OrderProductSerializer(many=True, read_only=True)
 
     # seller = serializers.CharField(source='seller.name', read_only=True)
     # seller = SerllerSerializer(read_only=True)

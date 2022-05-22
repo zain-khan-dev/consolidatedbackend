@@ -4,7 +4,7 @@ from django.shortcuts import render
 from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
-from ecommerce.serialzers import CustomerSeralizer, OrderSerializer, ProductSeralizer, SerllerSerializer
+from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SerllerSerializer
 from .models import ProfileUser, Order, Product
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin
 from rest_framework.status import HTTP_404_NOT_FOUND
 from .models import Cart
-from .serialzers import UserCartSerializer, CartItemSerializer, AddCartSerializer
+from .serialzers import AddCartSerializer, ViewOrderSerializer, PlaceOrderSerializer
 
 
 # Create your views here.
@@ -33,9 +33,8 @@ class SellerViewSet(ModelViewSet):
 
 
 
-
 class ProductViewSet(ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Product.objects.all()
 
 
@@ -49,7 +48,6 @@ class ProductViewSet(ModelViewSet):
 
 
     def perform_create(self, serializer):
-        print("here")
         user = self.request.user
         seller = ProfileUser.objects.filter(user=user, type="S").first()
         serializer.save(seller_id=seller.id)
@@ -58,11 +56,17 @@ class ProductViewSet(ModelViewSet):
 
 class OrderView(ModelViewSet):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    # serializer_class = ViewOrderSerializer
 
     permission_class = [permissions.IsAuthenticated]
 
 
+
+    def get_serializer_class(self, *args, **kwargs):
+        if(self.action == "retrieve" or self.action == "list"):
+            return ViewOrderSerializer
+        else:
+            return PlaceOrderSerializer
         
 
     def list(self, request):
@@ -71,11 +75,11 @@ class OrderView(ModelViewSet):
         if(profile.type == "S"): # if a seller getting order list
             products = Product.objects.filter(seller=profile).prefetch_related("orders").all()
             orders = list(map(lambda product:product.orders.all(), products))
-            serializedOrders = OrderSerializer(*orders, many=True)
+            serializedOrders = ViewOrderSerializer(*orders, many=True)
             print(serializedOrders.data)
         else: # if a customer getting order list
             print(profile.orders)
-            serializedOrders = OrderSerializer(profile.orders, many=True)
+            serializedOrders = ViewOrderSerializer(profile.orders, many=True)
         return Response(serializedOrders.data)
 
 
@@ -83,6 +87,7 @@ class OrderView(ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         customer = ProfileUser.objects.filter(user=user, type='C').first()
+        print(customer)
         serializer.save(customer_id=customer)
 
 
