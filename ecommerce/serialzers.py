@@ -173,7 +173,6 @@ class ProductViewSerializer(serializers.ModelSerializer):
 
     seller = SellerSerializer(read_only=True)
 
-    images = ProductImageSerializer(many=True)
 
     class Meta:
         model=Product

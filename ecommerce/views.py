@@ -48,12 +48,34 @@ class ProductViewSet(ModelViewSet):
             return  ProductViewSerializer
 
 
+#   name = models.CharField(max_length=200, null=False)
 
-    def perform_create(self, serializer):
+
+    def create(self,request, *args, **kwargs):
         user = self.request.user
-        seller = ProfileUser.objects.filter(user=user, type="S").first()
-        serializer.save(seller_id=seller.id)
+        print(self.request.FILES)
 
+        # name = self.request.POST.get("name")
+        # description = self.request.POST.get("description")
+        # description = self.request.POST.get("price")
+        seller = ProfileUser.objects.filter(user=user, type="S").first()
+        name = self.request.POST.get("name")
+        description = self.request.POST.get("description")
+        price = self.request.POST.get("price")
+        stock = self.request.POST.get("stock")
+        category = self.request.POST.get("category")
+        product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller)
+        product.save()
+        productSerializer = ProductViewSerializer(instance=product)
+        
+        # serializer.save(seller_id=seller.id)
+        for file in self.request.FILES.values():
+            print(file)
+            productImage = ProductImage(image=file, product_id=product)
+            productImage.save()
+            productSerializer = ProductImageSerializer(productImage)
+
+        return Response(productSerializer.data)
 
 
 class OrderView(ModelViewSet):
