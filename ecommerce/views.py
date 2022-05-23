@@ -1,4 +1,5 @@
 import json
+from unicodedata import category
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import render
 from ecommerce import serialzers
@@ -134,3 +135,12 @@ class CustomerOrderView(APIView):
             return Response(serializer.data)
 
 
+
+
+
+class CategoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        categoryType = kwargs["type"]
+        products = Product.objects.filter(category=categoryType)
+        serializer = ProductViewSerializer(products, many=True)
+        return Response(serializer.data)
