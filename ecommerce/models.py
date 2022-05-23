@@ -23,6 +23,11 @@ class Product(models.Model):
     category = models.CharField(choices=PRODUCT_CATEGORIES, max_length=50)
 
 
+class ProductImage(models.Model):
+    image = models.ImageField(upload_to="ecommerce/asset")
+    product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="images")
+
+
 
 class Order(models.Model):
     customer_id = models.ForeignKey(ProfileUser,on_delete=models.CASCADE, related_name="orders")

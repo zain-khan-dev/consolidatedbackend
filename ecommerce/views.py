@@ -5,14 +5,15 @@ from django.shortcuts import render
 from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
-from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SerllerSerializer
-from .models import ProfileUser, Order, Product
+from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SellerSerializer
+from .models import ProfileUser, Order, Product, ProductImage
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, ProductViewSerializer
+from .serialzers import CartSerializer, ProductImageSerializer, ProductViewSerializer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin
 from rest_framework.status import HTTP_404_NOT_FOUND
 from .models import Cart
@@ -30,7 +31,7 @@ class CustomerViewSet(ModelViewSet):
 
 class SellerViewSet(ModelViewSet):
     queryset = ProfileUser.objects.filter(type="S")
-    serializer_class = SerllerSerializer
+    serializer_class = SellerSerializer
 
 
 
@@ -144,3 +145,9 @@ class CategoryView(APIView):
         products = Product.objects.filter(category=categoryType)
         serializer = ProductViewSerializer(products, many=True)
         return Response(serializer.data)
+
+
+class UploadImage(ListCreateAPIView):
+    
+    serializer_class = ProductImageSerializer
+    queryset = ProductImage.objects.all()

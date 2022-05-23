@@ -1,6 +1,6 @@
 from wsgiref import validate
 from rest_framework import serializers
-from .models import Cart, ProfileUser, Product, Order
+from .models import Cart, ProductImage, ProfileUser, Product, Order
 from django.contrib.auth.models import User
 
 
@@ -136,10 +136,18 @@ class PlaceOrderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
     
 
 
-class SerllerSerializer(serializers.ModelSerializer):
+class SellerSerializer(serializers.ModelSerializer):
 
     user = UserSeralizer()
 
@@ -163,7 +171,9 @@ class SerllerSerializer(serializers.ModelSerializer):
 
 class ProductViewSerializer(serializers.ModelSerializer):
 
-    seller = SerllerSerializer(read_only=True)
+    seller = SellerSerializer(read_only=True)
+
+    images = ProductImageSerializer(many=True)
 
     class Meta:
         model=Product
@@ -177,6 +187,8 @@ class ProductSeralizer(serializers.ModelSerializer):
 
     # seller = serializers.CharField(source='seller.name', read_only=True)
     # seller = SerllerSerializer(read_only=True)
+
+    images = ProductImageSerializer(many=True)
 
     class Meta:
         model = Product
