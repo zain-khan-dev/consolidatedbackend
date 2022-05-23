@@ -111,6 +111,7 @@ class UserCartView(APIView):
     def get(self, request):
         user = request.user
         customer = ProfileUser.objects.filter(user=user, type="C").first()
+        print(customer)
         print(customer.id)
         cartItems = CartSerializer(customer.cart.select_related('product_id').all(), many=True)
         return Response(cartItems.data)
@@ -129,7 +130,7 @@ class CustomerOrderView(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
         else:
             customer_orders = Order.objects.filter(customer_id=customer_id)
-            serializer = OrderSerializer(customer_orders, many=True)
+            serializer = ViewOrderSerializer(customer_orders, many=True)
             return Response(serializer.data)
 
 
