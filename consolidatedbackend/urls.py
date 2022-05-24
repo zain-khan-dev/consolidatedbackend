@@ -19,16 +19,21 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.conf.urls.static import static
+from . import settings
 
-urlpatterns = [
+urlpatterns = []
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+urlpatterns += [
     path('admin/', admin.site.urls),
     path('rssfeeder/', include('rssfeeder.urls')),
     path("ecommerce/", include('ecommerce.urls')),
     path("api/token/", TokenObtainPairView.as_view()),
     path("api/token/refresh/", TokenRefreshView.as_view()),
-    
 ]
-
 
 urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
