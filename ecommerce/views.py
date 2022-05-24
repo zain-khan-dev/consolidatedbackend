@@ -10,7 +10,7 @@ from .models import ProductSpecification, ProfileUser, Order, Product, ProductIm
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, ProductImageSerializer, ProductViewSerializer
+from .serialzers import CartSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
@@ -185,3 +185,12 @@ class UploadImage(ListCreateAPIView):
     
     serializer_class = ProductImageSerializer
     queryset = ProductImage.objects.all()
+
+
+
+
+
+class ProductSpecs(ListCreateAPIView):
+
+    serializer_class = ProductSpecsSerializer
+    queryset = ProductSpecification.objects.all()

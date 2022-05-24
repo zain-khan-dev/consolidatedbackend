@@ -19,4 +19,5 @@ urlpatterns = [
     path("cart/", views.UserCartView.as_view()),
     path('category/<str:type>', views.CategoryView.as_view()),
     path("uploadImage/", views.UploadImage.as_view()),
+    path("productspecs/", views.ProductSpecs.as_view())
 ]
