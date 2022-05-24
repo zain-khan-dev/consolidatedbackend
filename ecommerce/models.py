@@ -21,6 +21,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     stock = models.IntegerField()
     category = models.CharField(choices=PRODUCT_CATEGORIES, max_length=50)
+    discount = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)]) # discount can vary only beteween 0 and 99
 
 
 class ProductImage(models.Model):

@@ -48,7 +48,7 @@ class ProductViewSet(ModelViewSet):
             return  ProductViewSerializer
 
 
-#   name = models.CharField(max_length=200, null=False)
+#   name = models.CharField(max_length=200, null=False) 
 
 
     def create(self,request, *args, **kwargs):
@@ -64,7 +64,8 @@ class ProductViewSet(ModelViewSet):
         price = self.request.POST.get("price")
         stock = self.request.POST.get("stock")
         category = self.request.POST.get("category")
-        product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller)
+        discount = self.request.POST.get("discount")
+        product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller, discount=discount)
         product.save()
         productSerializer = ProductViewSerializer(instance=product)
         
