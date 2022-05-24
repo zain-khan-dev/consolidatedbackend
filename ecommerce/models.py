@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .utils.Constants import OrderStatus, PRODUCT_CATEGORIES
+from .utils.Constants import OrderStatus, PRODUCT_CATEGORIES, MEASURE_TYPES
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from datetime import datetime
 
 class ProfileUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None, related_name='users')
@@ -28,6 +28,16 @@ class ProductImage(models.Model):
     image = models.ImageField()
     product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="images")
 
+
+
+class ProductSpecification(models.Model):
+    width = models.DecimalField(max_digits=8, decimal_places=2)
+    height = models.DecimalField(max_digits=8, decimal_places=2)
+    measure_type = models.CharField(max_length=100, choices=MEASURE_TYPES)
+    model_no = models.CharField(max_length=50)
+    release_date = models.DateField(default=datetime.today)
+    manufacturer_name = models.CharField(max_length=100)
+    product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="specs")
 
 
 class Order(models.Model):

@@ -6,7 +6,7 @@ from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
 from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SellerSerializer
-from .models import ProfileUser, Order, Product, ProductImage
+from .models import ProductSpecification, ProfileUser, Order, Product, ProductImage
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
@@ -65,16 +65,27 @@ class ProductViewSet(ModelViewSet):
         stock = self.request.POST.get("stock")
         category = self.request.POST.get("category")
         discount = self.request.POST.get("discount")
+        width = self.request.POST.get("width")
+        height = self.request.POST.get("height")
+        metric = self.request.POST.get("metric")
+        model_no = self.request.POST.get("model")
+        release_date = self.request.POST.get("release_date")
+        manufacturer_name = self.request.POST.get("manufacturer_name")
+
         product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller, discount=discount)
         product.save()
         productSerializer = ProductViewSerializer(instance=product)
         
-        # serializer.save(seller_id=seller.id)
+        # create product images for the saved product reference
         for file in self.request.FILES.values():
-            print(file)
             productImage = ProductImage(image=file, product_id=product)
             productImage.save()
-            productSerializer = ProductImageSerializer(productImage)
+
+        # create product specification for the saved product reference
+
+        specs = ProductSpecification(product_id = product, width=width, height=height,measure_type=metric,model_no=model_no,release_date=release_date,manufacturer_name=manufacturer_name)
+
+        specs.save()
 
         return Response(productSerializer.data)
 
