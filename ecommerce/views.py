@@ -1,5 +1,6 @@
 import json
 from unicodedata import category
+
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import render
 from ecommerce import serialzers
@@ -10,13 +11,14 @@ from .models import ProductSpecification, ProfileUser, Order, Product, ProductIm
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
+from .serialzers import CartSerializer, CommentSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin
 from rest_framework.status import HTTP_404_NOT_FOUND
-from .models import Cart
+from rest_framework.generics import GenericAPIView, ListAPIView
+from .models import Cart, Comment
 from .serialzers import AddCartSerializer, ViewOrderSerializer, PlaceOrderSerializer
 
 
@@ -170,6 +172,10 @@ class CustomerOrderView(APIView):
             return Response(serializer.data)
 
 
+
+class CommentVIew(ListCreateAPIView):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all() 
 
 
 

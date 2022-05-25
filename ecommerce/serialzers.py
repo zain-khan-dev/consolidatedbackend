@@ -1,6 +1,6 @@
 from wsgiref import validate
 from rest_framework import serializers
-from .models import Cart, ProductImage, ProductSpecification, ProfileUser, Product, Order
+from .models import Cart, ProductImage, ProductSpecification, ProfileUser, Product, Order, Comment
 from django.contrib.auth.models import User
 
 
@@ -185,6 +185,15 @@ class ProductSpecsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
 class ProductSeralizer(serializers.ModelSerializer):
 
     # orders = OrderProductSerializer(many=True, read_only=True)
@@ -195,10 +204,6 @@ class ProductSeralizer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True)
     
     specs = ProductSpecsSerializer(many=True)
-
-
-    
-
 
     class Meta:
         model = Product
