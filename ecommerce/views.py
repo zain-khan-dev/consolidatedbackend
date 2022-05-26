@@ -80,7 +80,7 @@ class ProductViewSet(ModelViewSet):
         
         # create product images for the saved product reference
         for file in self.request.FILES.values():
-            productImage = ProductImage(image=file, product_id=product)
+            productImage = ProductImage(src=file, product_id=product)
             productImage.save()
 
         # create product specification for the saved product reference

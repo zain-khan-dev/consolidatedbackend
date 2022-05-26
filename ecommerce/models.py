@@ -25,7 +25,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    image = models.ImageField()
+    src = models.ImageField()
     product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="images")
 
 
