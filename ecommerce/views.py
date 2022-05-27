@@ -7,11 +7,11 @@ from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
 from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SellerSerializer
-from .models import ProductSpecification, ProfileUser, Order, Product, ProductImage
+from .models import ProductFeature, ProductSpecification, ProfileUser, Order, Product, ProductImage
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, CommentSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
+from .serialzers import CartSerializer, CommentSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
@@ -200,3 +200,9 @@ class ProductSpecs(ListCreateAPIView):
 
     serializer_class = ProductSpecsSerializer
     queryset = ProductSpecification.objects.all()
+
+
+class ProductFeatureView(ListCreateAPIView):
+
+    serializer_class = ProductFeatureSerializer
+    queryset = ProductFeature.objects.all()

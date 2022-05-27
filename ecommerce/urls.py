@@ -20,5 +20,6 @@ urlpatterns = [
     path('category/<str:type>', views.CategoryView.as_view()),
     path("uploadImage/", views.UploadImage.as_view()),
     path("productspecs/", views.ProductSpecs.as_view()),
-    path("comments/", views.CommentVIew.as_view())
+    path("comments/", views.CommentVIew.as_view()),
+    path("addFeature/", views.ProductFeatureView.as_view())
 ]

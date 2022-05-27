@@ -29,6 +29,11 @@ class ProductImage(models.Model):
     product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="images")
 
 
+class ProductFeature(models.Model):
+    product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="features")
+    description = models.CharField(max_length=200)
+
+
 
 class ProductSpecification(models.Model):
     width = models.DecimalField(max_digits=8, decimal_places=2)
