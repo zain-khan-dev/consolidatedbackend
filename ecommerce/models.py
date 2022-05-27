@@ -42,7 +42,7 @@ class ProductSpecification(models.Model):
     model_no = models.CharField(max_length=50)
     release_date = models.DateField(default=datetime.today)
     manufacturer_name = models.CharField(max_length=100)
-    product_id = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="specs")
+    product_id = models.OneToOneField(to=Product, on_delete=models.CASCADE, related_name="specs")
 
 
 class Order(models.Model):

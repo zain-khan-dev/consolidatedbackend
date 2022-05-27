@@ -210,7 +210,7 @@ class ProductSeralizer(serializers.ModelSerializer):
 
     images = ProductImageSerializer(many=True)
     
-    specs = ProductSpecsSerializer(many=True)
+    specs = ProductSpecsSerializer()
 
     features = ProductFeatureSerializer(many=True)
 
