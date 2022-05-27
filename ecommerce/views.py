@@ -55,7 +55,6 @@ class ProductViewSet(ModelViewSet):
 
     def create(self,request, *args, **kwargs):
         user = self.request.user
-        print(self.request.FILES)
 
         # name = self.request.POST.get("name")
         # description = self.request.POST.get("description")
@@ -73,15 +72,21 @@ class ProductViewSet(ModelViewSet):
         model_no = self.request.POST.get("model")
         release_date = self.request.POST.get("release_date")
         manufacturer_name = self.request.POST.get("manufacturer_name")
-
+        
         product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller, discount=discount)
         product.save()
         productSerializer = ProductViewSerializer(instance=product)
         
+        # Add features 
+        features = [ProductFeature(product_id=product , description=value) for key,value in self.request.POST.items() if key.split('.')[0] == 'features']
+
+        ProductFeature.objects.bulk_create(features)
+
+
         # create product images for the saved product reference
-        for file in self.request.FILES.values():
-            productImage = ProductImage(src=file, product_id=product)
-            productImage.save()
+        productImages = [ProductImage(src=file, product_id=product) for file in self.request.FILES.values()]
+        ProductImage.objects.bulk_create(productImages)
+
 
         # create product specification for the saved product reference
 

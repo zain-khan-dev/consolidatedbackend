@@ -205,7 +205,7 @@ class ProductSeralizer(serializers.ModelSerializer):
 
     # orders = OrderProductSerializer(many=True, read_only=True)
 
-    # seller = serializers.CharField(source='seller.name', read_only=True)
+    # seller = serializers.CharField(source='seller.name', read_osnly=True)
     # seller = SerllerSerializer(read_only=True)
 
     images = ProductImageSerializer(many=True)
