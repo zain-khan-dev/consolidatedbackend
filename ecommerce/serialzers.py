@@ -214,6 +214,8 @@ class ProductSeralizer(serializers.ModelSerializer):
 
     features = ProductFeatureSerializer(many=True)
 
+    comments = CommentSerializer(many=True)
+
     class Meta:
         model = Product
         fields = '__all__'

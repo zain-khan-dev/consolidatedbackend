@@ -184,7 +184,7 @@ class CustomerOrderView(APIView):
 
 
 
-class CommentVIew(ListCreateAPIView):
+class CommentView(ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all() 
 
