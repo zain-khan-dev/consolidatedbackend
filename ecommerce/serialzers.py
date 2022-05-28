@@ -189,6 +189,14 @@ class ProductSpecsSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
 
+
+    comment_by = serializers.SerializerMethodField('get_comment_by')
+
+
+    def get_comment_by(self, obj):
+        print(repr(obj))
+        return obj.comment_by.name
+
     class Meta:
         model = Comment
         fields = '__all__'

@@ -61,8 +61,9 @@ class Comment(models.Model):
     comment_by = models.ForeignKey(ProfileUser, on_delete=models.CASCADE, related_name='comments')
     comment_title = models.CharField(default="", max_length=200)
     comment_text = models.CharField(default="", max_length=2000)
-    rating = models.IntegerField(default=0) 
+    rating = models.IntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(5)]) 
     comment_to = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    comment_ts = models.DateTimeField(auto_now_add=True)
 
 
 class Cart(models.Model):
