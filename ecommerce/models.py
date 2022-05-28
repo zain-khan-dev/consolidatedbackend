@@ -21,7 +21,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     stock = models.IntegerField()
     category = models.CharField(choices=PRODUCT_CATEGORIES, max_length=50)
-    discount = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)]) # discount can vary only beteween 0 and 99
+    discount = models.IntegerField(blank=True, default=0, validators=[MinValueValidator(0), MaxValueValidator(99)]) # discount can vary only beteween 0 and 99
 
 
 class ProductImage(models.Model):
@@ -43,6 +43,8 @@ class ProductSpecification(models.Model):
     release_date = models.DateField(default=datetime.today)
     manufacturer_name = models.CharField(max_length=100)
     product_id = models.OneToOneField(to=Product, on_delete=models.CASCADE, related_name="specs")
+    expiry_date = models.CharField(default="NA", max_length=20, blank=False)
+    country_of_origin = models.CharField(max_length=100)
 
 
 class Order(models.Model):

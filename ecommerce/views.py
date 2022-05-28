@@ -72,6 +72,11 @@ class ProductViewSet(ModelViewSet):
         model_no = self.request.POST.get("model")
         release_date = self.request.POST.get("release_date")
         manufacturer_name = self.request.POST.get("manufacturer_name")
+        expiry_date = self.request.POST.get("expiry_date")
+        country_of_origin = self.request.POST.get("country_of_origin")
+
+        if(discount == ""):
+            discount = 0
         
         product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller, discount=discount)
         product.save()
@@ -90,7 +95,8 @@ class ProductViewSet(ModelViewSet):
 
         # create product specification for the saved product reference
 
-        specs = ProductSpecification(product_id = product, width=width, height=height,measure_type=metric,model_no=model_no,release_date=release_date,manufacturer_name=manufacturer_name)
+        specs = ProductSpecification(product_id = product, width=width, height=height,measure_type=metric,
+        model_no=model_no,release_date=release_date,manufacturer_name=manufacturer_name, country_of_origin=country_of_origin, expiry_date=expiry_date)
 
         specs.save()
 
