@@ -6,12 +6,12 @@ from django.shortcuts import render
 from ecommerce import serialzers
 from rest_framework.viewsets import ModelViewSet
 
-from ecommerce.serialzers import CustomerSeralizer, ProductSeralizer, SellerSerializer
+from ecommerce.serialzers import CustomerSeralizer, ProductSerializer, SellerSerializer
 from .models import ProductFeature, ProductSpecification, ProfileUser, Order, Product, ProductImage
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, CommentSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSerializer
+from .serialzers import CartSerializer, CommentSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSeralizer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
@@ -45,9 +45,9 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_class(self, *args, **kwargs):
         if(self.action == "retrieve" or self.action == "list"):
-            return ProductSeralizer
+            return ProductViewSeralizer
         else:
-            return  ProductViewSerializer
+            return  ProductSerializer
 
 
 #   name = models.CharField(max_length=200, null=False) 
@@ -194,7 +194,7 @@ class CategoryView(APIView):
     def get(self, request, *args, **kwargs):
         categoryType = kwargs["type"]
         products = Product.objects.filter(category=categoryType)
-        serializer = ProductViewSerializer(products, many=True)
+        serializer = ProductViewSeralizer(products, many=True)
         return Response(serializer.data)
 
 

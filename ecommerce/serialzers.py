@@ -168,7 +168,7 @@ class SellerSerializer(serializers.ModelSerializer):
 
 
 
-class ProductViewSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
 
     seller = SellerSerializer(read_only=True)
 
@@ -209,7 +209,7 @@ class ProductFeatureSerializer(serializers.ModelSerializer):
         model = ProductFeature
         fields = '__all__'
 
-class ProductSeralizer(serializers.ModelSerializer):
+class ProductViewSeralizer(serializers.ModelSerializer):
 
     # orders = OrderProductSerializer(many=True, read_only=True)
 
