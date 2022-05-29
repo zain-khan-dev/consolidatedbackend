@@ -21,5 +21,6 @@ urlpatterns = [
     path("uploadImage/", views.UploadImage.as_view()),
     path("productspecs/", views.ProductSpecs.as_view()),
     path("comments/", views.CommentView.as_view()),
-    path("addFeature/", views.ProductFeatureView.as_view())
+    path("addFeature/", views.ProductFeatureView.as_view()),
+    path("search/<str:query>", views.getSearchResult)
 ]

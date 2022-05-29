@@ -20,6 +20,7 @@ from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.generics import GenericAPIView, ListAPIView
 from .models import Cart, Comment
 from .serialzers import AddCartSerializer, ViewOrderSerializer, PlaceOrderSerializer
+from rest_framework.decorators import api_view
 
 
 # Create your views here.
@@ -80,7 +81,7 @@ class ProductViewSet(ModelViewSet):
         
         product = Product(name=name, description=description, price=price, stock=stock, category=category, seller = seller, discount=discount)
         product.save()
-        productSerializer = ProductViewSerializer(instance=product)
+        productSerializer = ProductSerializer(instance=product)
         
         # Add features 
         features = [ProductFeature(product_id=product , description=value) for key,value in self.request.POST.items() if key.split('.')[0] == 'features']
@@ -169,6 +170,9 @@ class UserCartView(APIView):
 
 
 
+
+
+
 class CustomerOrderView(APIView):
 
 
@@ -217,3 +221,10 @@ class ProductFeatureView(ListCreateAPIView):
 
     serializer_class = ProductFeatureSerializer
     queryset = ProductFeature.objects.all()
+
+
+@api_view(["GET"])
+def getSearchResult(request, *args, **kwargs):
+    query = kwargs["query"]
+    products = Product.objects.filter(name__contains=query)
+    return Response(ProductViewSeralizer(products, many=True).data)
