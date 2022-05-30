@@ -189,7 +189,7 @@ class ProductSpecsSerializer(serializers.ModelSerializer):
 
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class CommentViewSerializer(serializers.ModelSerializer):
 
 
     comment_by = serializers.SerializerMethodField('get_comment_by')
@@ -224,7 +224,7 @@ class ProductViewSeralizer(serializers.ModelSerializer):
 
     features = ProductFeatureSerializer(many=True)
 
-    comments = CommentSerializer(many=True)
+    comments = CommentViewSerializer(many=True)
 
     class Meta:
         model = Product

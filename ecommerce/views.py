@@ -11,7 +11,7 @@ from .models import ProductFeature, ProductSpecification, ProfileUser, Order, Pr
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, CommentSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSeralizer
+from .serialzers import CartSerializer, CommentViewSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSeralizer
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
@@ -189,8 +189,16 @@ class CustomerOrderView(APIView):
 
 
 class CommentView(ListCreateAPIView):
-    serializer_class = CommentSerializer
     queryset = Comment.objects.all() 
+    serializer_class = CommentViewSerializer
+
+
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        customer = ProfileUser.objects.filter(user=user, type='C').first()
+        print(customer)
+        serializer.save(comment_by=customer)
 
 
 
