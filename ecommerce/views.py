@@ -141,7 +141,7 @@ class OrderView(ModelViewSet):
         serializer.save(customer_id=customer)
 
 
-class AddToCardView(CreateAPIView):
+class AddToCartView(CreateAPIView):
     serializer_class = AddCartSerializer
 
     def perform_create(self, serializer):

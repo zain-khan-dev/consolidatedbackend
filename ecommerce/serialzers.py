@@ -4,6 +4,14 @@ from .models import Cart, ProductFeature, ProductImage, ProductSpecification, Pr
 from django.contrib.auth.models import User
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
+    
+
+
 
 
 class UserSeralizer(serializers.ModelSerializer):
@@ -17,9 +25,11 @@ class UserSeralizer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
 
+    images = ProductImageSerializer(many=True)
+
     class Meta:
         model = Product
-        fields=['id','name','description']
+        fields=['id','name','description', 'images']
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):
@@ -55,7 +65,7 @@ class AddCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['product_id', 'quantity']
+        fields = ['product_id', 'quantity', 'price']
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -136,14 +146,6 @@ class PlaceOrderSerializer(serializers.ModelSerializer):
 
 
 
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProductImage
-        fields = '__all__'
-    
 
 
 class SellerSerializer(serializers.ModelSerializer):
