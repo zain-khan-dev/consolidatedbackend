@@ -11,16 +11,17 @@ from .models import ProductFeature, ProductSpecification, ProfileUser, Order, Pr
 from rest_framework.response import Response
 from rest_framework.generics import  RetrieveDestroyAPIView, CreateAPIView
 from rest_framework import permissions
-from .serialzers import CartSerializer, CommentViewSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSeralizer
-from rest_framework.decorators import action
+from .serialzers import CartSerializer, CommentViewSerializer, OrderProductSerializer, ProductFeatureSerializer, ProductImageSerializer, ProductSpecsSerializer, ProductViewSeralizer
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.generics import GenericAPIView, ListAPIView
 from .models import Cart, Comment
 from .serialzers import AddCartSerializer, ViewOrderSerializer, PlaceOrderSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from functools import reduce
 
 
 # Create your views here.
@@ -236,3 +237,21 @@ def getSearchResult(request, *args, **kwargs):
     query = kwargs["query"]
     products = Product.objects.filter(name__contains=query)
     return Response(ProductViewSeralizer(products, many=True).data)
+
+
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getFilteredOrders(request, *args, **kwargs):
+    user = request.user
+    seller = ProfileUser.objects.filter(user=user)[0]
+    print(seller)
+    status = kwargs["filter"]
+    products = Product.objects.filter(seller=seller)
+    print(products)
+    print()
+    filtered_orders = [product.orders.filter(status=status) for product in products]
+    filtered_orders = reduce(lambda a, b:a|b, filtered_orders)
+    print(filtered_orders)
+    return Response(OrderProductSerializer(filtered_orders, many=True).data)

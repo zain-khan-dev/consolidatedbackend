@@ -53,11 +53,9 @@ class CustomerDetailSerializer(serializers.ModelSerializer):
 
 class OrderProductSerializer(serializers.ModelSerializer):
 
-    customer_id = CustomerDetailSerializer()
-
     class Meta:
         model = Order
-        fields = ['id','customer_id', 'order_ts', 'status']
+        fields = ['id','price', 'quantity', 'order_ts', 'status']
 
 
 
