@@ -23,5 +23,6 @@ urlpatterns = [
     path("comments/", views.CommentView.as_view()),
     path("addFeature/", views.ProductFeatureView.as_view()),
     path("search/<str:query>", views.getSearchResult),
-    path("orders/<str:filter>", views.getFilteredOrders)
+    path("orders/<str:filter>", views.getFilteredOrders),
+    path("orders/<int:pk>/", views.changeOrderStatus)
 ]

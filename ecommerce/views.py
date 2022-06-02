@@ -246,12 +246,18 @@ def getSearchResult(request, *args, **kwargs):
 def getFilteredOrders(request, *args, **kwargs):
     user = request.user
     seller = ProfileUser.objects.filter(user=user)[0]
-    print(seller)
     status = kwargs["filter"]
     products = Product.objects.filter(seller=seller)
-    print(products)
-    print()
     filtered_orders = [product.orders.filter(status=status) for product in products]
     filtered_orders = reduce(lambda a, b:a|b, filtered_orders)
-    print(filtered_orders)
     return Response(OrderProductSerializer(filtered_orders, many=True).data)
+
+
+
+@api_view(["PUT"])
+def changeOrderStatus(request, *args, **kwargs):
+    order_id = kwargs["pk"]
+    order = Order.objects.filter(id=order_id).first()
+    order.status = request.POST["status"]
+    order.save()
+    return Response(OrderProductSerializer(order).data)

@@ -51,11 +51,11 @@ class CustomerDetailSerializer(serializers.ModelSerializer):
 
 
 
-class OrderProductSerializer(serializers.ModelSerializer):
+class ProductSpecsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Order
-        fields = ['id','price', 'quantity', 'order_ts', 'status']
+        model = ProductSpecification
+        fields = '__all__'
 
 
 
@@ -146,6 +146,7 @@ class PlaceOrderSerializer(serializers.ModelSerializer):
 
 
 
+
 class SellerSerializer(serializers.ModelSerializer):
 
     user = UserSeralizer()
@@ -176,13 +177,6 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
         fields = "__all__"
-
-
-class ProductSpecsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProductSpecification
-        fields = '__all__'
 
 
 
@@ -229,4 +223,17 @@ class ProductViewSeralizer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+
+
+
+class OrderProductSerializer(serializers.ModelSerializer):
+
+
+    product_id = ProductSerializer()
+
+    class Meta:
+        model = Order
+        fields = ['id','price', 'quantity', 'order_ts', 'status', 'product_id']
 
