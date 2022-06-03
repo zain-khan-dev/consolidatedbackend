@@ -261,3 +261,11 @@ def changeOrderStatus(request, *args, **kwargs):
     order.status = request.POST["status"]
     order.save()
     return Response(OrderProductSerializer(order).data)
+
+
+@api_view(["DELETE"])
+def deleteCartItem(request, *args, **kwargs):
+    id = kwargs["pk"]
+    cartItem = Cart.objects.get(id=id)
+    cartItem.delete()
+    return Response({"message":"deleted succesfully"})
